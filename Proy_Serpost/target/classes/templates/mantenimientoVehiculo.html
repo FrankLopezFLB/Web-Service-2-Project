@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    
+	<title>Vehiculo</title>
+	
+	<style>
+		body {
+	  		background: #eee;
+		}
+		.modal-header{
+		color: #191796;
+		background:#CCE5FF;
+		display: flex;
+  		justify-content: center;
+		}
+		.tits{
+			font-size:35pt;
+			font-family:georgia;
+			/*font-weight:bold;*/
+		}
+		.help-block {
+		  		color: red;
+		}
+		.form-group.has-error .form-control-label {
+		  color: red;
+		}
+		.form-group.has-error .form-control {
+		  border: 1px solid red;
+		  box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+	</style>
+</head>
+
+<body>
+	<div th:replace="menu::header">
+	</div>
+
+<div class="alert alert-warning alert-dismissible fade show" th:if="${mensaje}">
+		  			<div th:text="${mensaje}"></div >
+		  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    			<span aria-hidden="true">&times;</span>
+		  			</button>
+				</div>
+	<div class="container">
+		<br>
+  		<br>
+		<h2 class="text-center tits">Lista de Vehiculos</h2>
+  		<br>
+  		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" style = "background-color:#191796" data-toggle="modal" data-target="#modalVehiculo">
+			Nuevo Vehiculo
+		</button>
+		<br>
+		<br>
+		
+		<!-- --------------------------------------------INICIO DE TABLA-------------------------------------------- -->
+		<table id="tableVehiculo" class="table table-striped table-bordered" style="width:100%">
+        	<thead class="thead-dark">
+            	<tr>
+	                <th>CODIGO</th>
+	                <th>MATRICULA</th>
+	                <th>MARCA</th>
+	                <th>MODELO</th>
+	                <th>FECHA ADQUISICION</th>
+	                <th>CONDUCTOR</th>
+	                <th></th>
+	                <th></th>
+            	</tr>
+        	</thead>
+        	
+        	<tbody>
+        		<tr th:each="v : ${lstVehiculos}" var="row">
+		        	<td th:text="${v.codigo}"></td>
+		        	<td th:text="${v.matricula}"></td>
+		        	<td th:text="${v.marca}"></td>
+		            <td th:text="${v.modelo}"></td>
+		        	<td th:text="${v.fechaAd}"></td>
+		        	<td style="display:none;" th:text="${v.codConductor}"></td>
+		        	<td th:each="c : ${lstConductor}" th:if="${c.codigo} == ${v.codConductor}" th:text="${c.nombre}"></td>
+		        	<td>
+		        		<button type="button" class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalVehiculo">
+		        			Editar
+		        		</button>
+		        	</td>
+					<td>
+						<button type="button" class="btn btn-danger btn-eliminar" data-toggle="modal" data-target="#modalEliminar">
+							Eliminar
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+    
+		<div class="modal fade" id="modalVehiculo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Vehiculo</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+		      
+					<!-- FORMULARIO PARA GRABAR -->
+					<div class="modal-body">
+						<form id="formVehiculo" action="/vehiculo/guardar" method="post" th:object="${vehiculo}">
+							<div class="form-group" hidden>
+								<label for="exampleInputEmail1">Codigo</label>
+								<input type="text" class="form-control" id="idCodigoVeh" name="codigoVeh" value="vacio" th:field="*{codigo}">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Matricula</label>
+								<input type="text" class="form-control" id="idMatriculaVeh" name="matriculaVeh" placeholder="Matricula: XXX-0000" th:field="*{matricula}">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Marca</label>
+								<input type="text" class="form-control" id="idMarcaVeh" name="marcaVeh" placeholder="Ingresar Marca" th:field="*{marca}">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Modelo</label>
+								<input type="text" class="form-control" id="idModeloVeh" name="modeloVeh" placeholder="Ingresar Modelo" th:field="*{modelo}">
+							</div>
+							<div class="form-group"> <!-- Date input -->
+								<label class="control-label" for="date">Fecha de Adquisicion</label>
+								<input class="form-control" id="idFecProVeh" name="fecProVeh" placeholder="dd/mm/YYYY" th:field="*{fechaAd}" >
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Conductor</label>
+								<select class="form-control" id="idConductor" name="codConductor" th:field="*{codConductor}">
+									<option value="-1">[Seleccione Conductor]</option>
+								</select>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary" style = "background-color:#191796">Guardar</button>
+								<button type="button" class="btn btn-info" data-dismiss="modal" id="btn-cerrar">Cerrar</button>		        
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		      
+		<!-- INICIO ELIMINAR -->
+		<div class="modal fade" id="modalEliminar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Eliminar Destino</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btn-cerrar">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="formVehiculo" action="/vehiculo/eliminar" method="post" th:object="${vehiculo}">
+							<input type="hidden" class="form-control" id="idCodigoEliminar" name="codigoEliminar" th:field="*{codigo}"> ¿Seguro de eliminar?	
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">SI</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+  		<!-- FIN ELIMINAR --> 		
+	</div>
+	
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js" ></script>
+	
+	<script src ="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+	<!-- Bootstrap Date-Picker Plugin -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	
+	<script>
+	    $(document).ready(function(){
+	        var date_input=$('input[name="fechaAd"]');
+	        date_input.datepicker({
+	            format: 'dd/mm/yyyy',
+	            minViewMode: 3,
+	            language: "es",
+	            autoclose: true,
+	        })
+	    })
+	</script>
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var listaConductor = /*[[${lstConductor}]]*/ 'lista_vacia';
+		/*]]>*/
+		console.log(listaConductor);
+		
+		var select = document.getElementById('idConductor');
+		
+		for(var i = 0; i < listaConductor.length; i++) {
+		    var opt = listaConductor[i];
+		    var el = document.createElement("option");
+		    el.value = listaConductor[i].codigo;
+		    el.textContent = listaConductor[i].nombre;
+		    select.appendChild(el);
+		}
+		
+	</script>
+	
+	<script>
+			
+		$(document).ready(function() {
+	    	//$('#tableVehiculo').DataTable();
+		});
+		
+		$(document).on("click", ".btn-editar", function(){
+			var cod, mat, mar, mod, fec,con;
+
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			mat = $(this).parents("tr").find("td")[1].innerHTML;
+			mar = $(this).parents("tr").find("td")[2].innerHTML;
+			mod = $(this).parents("tr").find("td")[3].innerHTML;
+			fec = $(this).parents("tr").find("td")[4].innerHTML;
+			con = $(this).parents("tr").find("td")[5].innerHTML;
+
+			$("#idCodigoVeh").val(cod);
+			$("#idMatriculaVeh").val(mat);
+			$("#idMarcaVeh").val(mar);
+			$("#idModeloVeh").val(mod);
+			$("#idFecProVeh").val(fec);
+			$("#idConductor").val(con);
+
+		});
+		
+		$(document).on("click","#btn-cerrar",function(){
+			
+			$('#formVehiculo').data("bootstrapValidator").resetForm(true);
+			
+			$('#formVehiculo').trigger("reset");
+		})
+		
+		$(document).on("click", ".btn-eliminar", function () {
+			var cod;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			$("#idCodigoEliminar").val(cod);
+		})
+		
+	</script>
+	
+	<script type="text/javascript">    
+	    $(document).ready(function(){      	
+	        $('#formVehiculo').bootstrapValidator({      
+	        fields:{
+	        	matricula:{
+	        			validators:{
+	        				 notEmpty:{
+	       		 				 message:'Matricula es Obligatorio'
+	        				 },
+	        				 regexp:{
+	        					 regexp:/^[A-Z]{3}-[0-9]{4}$/,
+	        					 message:'Matricula con formato XXX-9999'
+	        				 }
+	        			 }
+	        		 },
+	        		 marca:{
+	        			 validators:{
+	        				 notEmpty:{
+	        					 message:'Marca es Obligatorio'
+	        				 },
+	        				 regexp:{
+	        					 regexp:/^[A-Z\s\Ñ]{3,20}$/,
+	        					 message:'solo letras MAYUSCULAS, minimo 3 caracteres'
+	        				 }
+	        			 }
+	        		 },
+	        		 modelo:{
+	        			 validators:{
+	        				 notEmpty:{
+	        					 message:'Modelo es Obligatorio'
+	        				 },
+	        				 regexp:{
+	        					 regexp:/^[a-zA-Z\s\ñ\Ñ0-9]{2,20}$/,
+	        					 message:'Letras y Numeros minimo 2 caracteres'
+	        				 }
+	        			 }
+	        		 },
+	        		 fechaAd:{
+	        			 validators:{
+	        				 notEmpty:{
+	        					 message:'Fecha de Adquisicion es Obligatorio'
+	        				 },
+	        				 regexp:{
+	        					 regexp:/^[0-9\/]{10}$/,
+	        					 message:'Formato: dd/MM/yyyy'
+	        				 }
+	        			 }
+	        		 },
+	        		 codConductor:{
+	        			 validators:{
+	        				 notEmpty:{
+	        					 message:'Conductor es Obligatorio'
+	        				 }
+	        			 }
+	        		 }
+	        		 
+	        	 }
+	        });   
+				
+	    });    
+	</script>   
+</body>
+</html >

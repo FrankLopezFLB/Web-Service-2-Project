@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Latest compiled and minified CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+
+<title>Menu</title>
+
+</head>
+
+<body>
+	
+
+<div class="pos-f-t" th:fragment="header">
+<style type="text/css">
+	body {
+	  background: #eee;
+	}
+	.navbar-header {
+		background: white;
+		border-radius: 10px;
+		width:100px;
+		}
+	.navbar-header img{
+		
+		width:100%;
+	}
+	.collapse{
+		font-family:georgia;
+	}
+	.nav-item{
+		
+		margin-right:10px;
+	}
+	.nav-link{
+		color:white;
+	}
+	.nav-link:hover{
+		color:#C42824;
+		/*font-weight:bold;*/
+	}
+</style>
+	<nav class="navbar navbar-expand-sm" style = "background-color:#191796">
+	  	  <div class="navbar-header">
+		       <div class="navbar-header">	 
+	     		 <img alt="" src="\Imagenes\serpost.png">
+	  			</div>
+	  	</div>
+	  
+	  <div class="collapse navbar-collapse" style = "background-color:#191796">
+		  <ul class="navbar-nav" th:each="m : ${session.lstMenu}">
+		  	    <li class="nav-item" >
+			      <a class="nav-link" th:href="@{${m.urlMenu}}" th:text="${m.nombreMenu}" ></a>
+			    </li>
+					    
+		  </ul>
+	
+		  <div class="navbar-nav ml-auto">
+		  		
+		     	<span class="nav-item nav-link" style = "color:white" th:text="${session.DATOS}" th:unless="${session == null}">
+		     		
+		     	</span>  
+		     
+		        <a href="/trabajador/cargarLogin" style = "color:white" class="nav-item nav-link">Cerrar Sesión</a>
+	      </div>
+    </div>
+	</nav>
+</div>
+
+
+
+
+	
+
+    <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+</body>
+</html>
