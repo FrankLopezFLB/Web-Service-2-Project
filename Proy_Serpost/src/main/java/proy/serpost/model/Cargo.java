@@ -30,3 +30,5 @@ public class Cargo {
 		this.nombrecargo = nombrecargo;
 	}
 }
+
+/* prueba */
