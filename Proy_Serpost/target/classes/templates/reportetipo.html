@@ -70,7 +70,7 @@
 				</tr>
 			</thead>
 				<tbody>
-	        	<tr th:each="rt : ${lstReporteTipo}" var="row">
+	        	<tr th:each="rt : ${lstReporteTipo.data}" var="row">
 						<td th:text="${rt.codigo}"></td>
 						<td th:text="${rt.destinatario}"></td>
 						<td th:text="${rt.fechaenvio}"></td>

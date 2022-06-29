@@ -18,9 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+
 public class JasperController {
 	@Autowired
 	private DataSource dataSource;
+	
+	
 	@RequestMapping("/{reportName}")
 	public void demoReport1(@PathVariable("reportName") final String reportName,
 			@RequestParam(required = false) Map<String, Object> parameters,
@@ -38,5 +41,4 @@ public class JasperController {
 		final OutputStream outputStream = response.getOutputStream();
 		JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 		}
-
 }
