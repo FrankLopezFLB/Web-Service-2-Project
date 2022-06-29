@@ -2,6 +2,8 @@ package proy.serpost;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class ProySerpostApplication {
@@ -11,6 +13,11 @@ public class ProySerpostApplication {
 		System.out.println("dale marmota!!!!");
 		System.out.println("ya casi se logra");
 		System.out.println("Termino de cargar la app >:V");
+	}
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 }
