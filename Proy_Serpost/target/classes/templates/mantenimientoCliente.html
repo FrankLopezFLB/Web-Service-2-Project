@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- JSTL / CustomTag -->
+
+<head>
+	<title>Mantenimiendo Cliente</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+
+	<style>
+		body {
+			background: #eee;
+		}
+
+		.modal-header {
+			color: #191796;
+			background: #CCE5FF;
+			display: flex;
+			justify-content: center;
+
+		}
+
+		.tits {
+			font-size: 35pt;
+			font-family: georgia;
+		}
+
+		.help-block {
+			color: red;
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+	</style>
+</head>
+
+<body>
+<div th:replace="menu::header">
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show" th:if="${mensaje}">
+		  			<div th:text="${mensaje}"></div >
+		  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    			<span aria-hidden="true">&times;</span>
+		  			</button>
+				</div>
+	<div class="container">
+		<br>
+		<br>
+		<h2 class="text-center tits">Lista de Clientes</h2>
+		<br>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCliente"
+			style="background-color:#191796">
+			Nuevo Cliente
+		</button>
+		<br>
+		<br>
+		<table id="tableCliente" class="table table-striped table-bordered" style="width:100%">
+			<thead class="thead-dark">
+				<tr>
+					<th>CÓDIGO</th>
+					<th>NOMBRE</th>
+					<th>APELLIDO</th>
+					<th>DNI</th>
+					<th>TELEFONO</th>
+					<th>CORREO</th>
+					<th></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="c : ${lstClientes}">
+					<td th:text="${c.codigoCli}"></td>
+					<td th:text="${c.nombreCli}"></td>
+					<td th:text="${c.apellidoCli}"></td>
+					<td th:text="${c.dniCli}"></td>
+					<td th:text="${c.telefonoCli}"></td>
+					<td th:text="${c.correoCli}"></td>
+
+					<td><button type="button" class="btn btn-info btn-editar" data-toggle="modal"
+							data-target="#modalCliente">Editar</button></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<a href="/reporte_clientes" target="_blank" class="btn btn-primary" style="float: right;">PDF</a>
+		
+
+		<!-- INICIO - Modal PARA REGISTRAR Y ACTUALIZAR CLIENTE-->
+		<div class="modal fade" id="modalCliente" data-backdrop="static" data-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Cliente</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="formCliente" action="/cliente/grabar" method="post" th:object="${cliente}">
+							<div class="form-group" hidden>
+								<label for="exampleInputEmail1">Código</label>
+								<!-- OJO CON EL VALUE Y EL CONTROLADOR -->
+								<input type="text" class="form-control" th:field="*{codigoCli}" id="idCodigo"
+									name="codigo" value="0" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Nombres</label>
+								<input type="text" class="form-control" th:field="*{nombreCli}" id="idNombre"
+									name="nombre" placeholder="Ingresar nombres">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Apellido</label>
+								<input type="text" class="form-control" th:field="*{apellidoCli}" id="idApellido"
+									name="apellido" placeholder="Ingresar apellido">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">DNI</label>
+								<input type="text" class="form-control" th:field="*{dniCli}" id="idDni" name="dni"
+									placeholder="Ingresar DNI">
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputPassword1">Telefono</label>
+								<input type="text" class="form-control" th:field="*{telefonoCli}" id="idTelefono"
+									name="telefono" placeholder="Ingresar Telefono">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPassword1">Correo</label>
+								<input type="text" class="form-control" th:field="*{correoCli}" id="idCorreo"
+									name="correo" placeholder="Ingresar correo">
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary"
+									style="background-color:#191796">Guardar</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal"
+									id="btn-cerrar">Cerrar</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- FIN - Modal PARA REGISTRAR Y ACTUALIZAR Trabajador-->
+	</div>
+
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+
+
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+	<script>
+
+		$(document).ready(function () {
+			$('#tableCliente').DataTable();
+
+		});
+
+		$(document).on("click", "#btn-cerrar", function () {
+			//resetear validación 
+			$('#formCliente').data("bootstrapValidator").resetForm(true);
+			//limpiar cajas
+			$('#formCliente').trigger("reset");
+			//asignar "0" a la caja con ID "idCodigo" 
+			$("#idCodigo").val(0);
+		})
+
+		$(document).on("click", ".btn-editar", function () {
+			//variables
+			var cod, nom, ape, dni, tele, correo;
+			//obtener valores de la fila actual según donde se haga clic al botón editar
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			nom = $(this).parents("tr").find("td")[1].innerHTML;
+			ape = $(this).parents("tr").find("td")[2].innerHTML;
+			dni = $(this).parents("tr").find("td")[3].innerHTML;
+			tele = $(this).parents("tr").find("td")[4].innerHTML;
+			correo = $(this).parents("tr").find("td")[5].innerHTML;
+
+
+
+			//mostrar los valores de las variables en los controles(cajas y select)
+			$("#idCodigo").val(cod);
+			$("#idNombre").val(nom);
+			$("#idApellido").val(ape);
+			$("#idDni").val(dni);
+			$("#idTelefono").val(tele);
+			$("#idCorreo").val(correo);
+
+		})
+
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#formCliente').bootstrapValidator({
+				fields: {
+					nombreCli: {
+						validators: {
+							notEmpty: {
+								message: 'Campo nombre es obligatorio'
+							},
+							regexp: {
+								regexp: /^[a-zA-Z\s\ñ\Ñ\á\é\í\ó\ú\Á\É\Í\Ó\Ú]{3,15}$/,
+								message: 'Campo nombre solo letras mínimo 3 y máximo 15'
+							}
+						}
+					},
+					apellidoCli: {
+						validators: {
+							notEmpty: {
+								message: 'Campo apellido es obligatorio'
+							},
+							regexp: {
+								regexp: /^[a-zA-Z\s\ñ\Ñ\á\é\í\ó\ú\Á\É\Í\Ó\Ú]{3,15}$/,
+								message: 'Campo apellido solo letras mínimo 3 y máximo 15'
+							}
+						}
+					},
+					dniCli: {
+						validators: {
+							notEmpty: {
+								message: 'Campo apellido dni es obligatorio'
+							},
+							regexp: {
+								regexp: /^[0-9]{8}$/,
+								message: 'Campo DNI solo numeros, 8 digitos'
+							}
+						}
+					},
+
+
+					telefonoCli: {
+						validators: {
+							notEmpty: {
+								message: 'Campo telefono es obligatorio'
+							},
+							regexp: {
+								regexp: /^[0-9]{8,15}$/,
+								message: 'Campo telefono solo numeros, hasta 15 digitos'
+							}
+						}
+					},
+					correoCli: {
+						validators: {
+							notEmpty: {
+								message: 'Campo correo es obligatorio'
+							},
+							regexp: {
+								regexp: /\S+@\S+\.\S+/,
+								message: 'Campo Correo como aa@aa.aa'
+							}
+						}
+					},
+				}
+			});
+
+		});    
+	</script>
+</body>
+
+</html>
